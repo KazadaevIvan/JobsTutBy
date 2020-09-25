@@ -1,21 +1,20 @@
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class JobsTutByTest {
 
     WebDriver driver;
+    HomePage homePage;
+    SearchPage searchPage;
 
     @BeforeMethod
     public void setUp() {
-        System.setProperty("webdriver.chrome.driver","src/test/resources/chromedriver.exe");
+        System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -23,15 +22,23 @@ public class JobsTutByTest {
     }
 
     @Test
-    public void JobsTutByTest() {
-        WebElement searchInput = driver.findElement(By.cssSelector("[data-qa=search-input]"));
-        searchInput.sendKeys("qa automation engineer");
-        WebElement searchButton = driver.findElement(By.cssSelector("[data-qa=search-button]"));
-        searchButton.click();
-        List<WebElement> elements = driver.findElements(By.cssSelector("[data-qa=vacancy-serp__vacancy-employer]"));
-        for (WebElement element: elements) {
-            System.out.println(element.getText());
-        }
+    public void getCompaniesByIndexTest() {
+        homePage = new HomePage(driver);
+        homePage.searchKeyWord("qa automation engineer");
+        searchPage = new SearchPage(driver);
+        searchPage.getCompany(1);
+        searchPage.getCompany(2);
+        searchPage.getCompany(3);
+    }
+
+    @Test
+    public void getCompaniesByNameTest() {
+        homePage = new HomePage(driver);
+        homePage.searchKeyWord("qa automation engineer");
+        searchPage = new SearchPage(driver);
+        searchPage.getCompany("SaM Solutions Самсолюшнс");
+        searchPage.getCompany("РОВЕНСИС");
+        searchPage.getCompany("Andersen");
     }
 
     @AfterMethod
